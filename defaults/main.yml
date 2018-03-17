@@ -1,0 +1,22 @@
+---
+timezone: "Europe/London"
+wait_delay: 16
+required_packages:
+  - firewalld
+  - chrony
+  - yum-utils
+  - bind-utils
+  - libselinux-python
+  - policycoreutils-python
+  - epel-release
+  - iscsi-initiator-utils
+  - rsync
+  - nmon
+  - git
+  - curl
+disabled_services:
+  - ntpd
+enabled_services:
+  - firewalld
+  - chronyd
+...

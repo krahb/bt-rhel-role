@@ -1,0 +1,97 @@
+---
+- name: hostname set
+  hostname:
+    name: "{{ hostvars[inventory_hostname].domain }}"
+  when: hostvars[inventory_hostname].domain is defined
+- name: set timezone to {{ timezone }}
+  timezone:
+    name: "{{ timezone }}"
+  tags: timezone
+- name: general packages installed
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ required_packages }}"
+- name: services stopped and disabled
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items: "{{ disabled_services }}"
+- name: services enabled and started
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items: "{{ enabled_services }}"
+- name: yum settings updated
+  lineinfile:
+    path: /etc/yum.conf
+    regexp: '^installonly_limit'
+    line: 'installonly_limit=3'
+- name: clean job
+  template:
+    src: clean_yum
+    dest: /etc/cron.daily/clean_yum
+    owner: root
+    group: root
+    mode: 0750
+- name: keepalive script in place
+  block:
+  - copy:
+      src: files/keepalive
+      dest: /usr/local/bin/keepalive
+      mode: "0755"
+    notify: restart keepalive
+  - copy:
+      src: files/keepalive.service
+      dest: /etc/systemd/system/keepalive.service
+      mode: "0640"
+    notify: restart keepalive
+  - systemd:
+      name: keepalive
+      state: started
+      enabled: true
+      daemon_reload: true
+  when: ansible_service_mgr == "systemd", 
+  tags: keepalive
+- name: latest kernel version installed
+  yum:
+    name: kernel
+    state: latest
+  register: kernel_update
+  tags: update
+- name: latest version of all packages installed
+  yum:
+    name: "*"
+    state: latest
+  register: latest_all
+  tags: update
+- name: get updates
+  command: yum history info
+  changed_when: false 
+  register: yum_history
+  when: latest_all.changed and not ansible_check_mode
+- name: list updates
+  debug:
+    msg: "{{ yum_history.stdout_lines }}"
+  when: latest_all.changed and not ansible_check_mode
+- name: check for restart needed
+  shell: needs-restarting --reboothint
+  ignore_errors: true
+  register: needs_restarting
+  changed_when: "needs_restarting.rc == 1"
+  tags: update
+- name: reboot
+  shell: sleep 2 && /usr/sbin/shutdown -r now "Kernel update"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when: (kernel_update.changed) or (needs_restarting.changed)
+  changed_when: true
+  register: reboot_after_kernel_update
+  tags: update
+- name: wait for {{ inventory_hostname }}
+  wait_for_connection:
+  tags: update
+...

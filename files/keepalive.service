@@ -1,0 +1,9 @@
+[Unit]
+Description=Console keepalives
+ 
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/keepalive
+ 
+[Install]
+WantedBy=multi-user.target

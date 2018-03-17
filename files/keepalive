@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SLEEPTIME=3600
+MAXCOUNTER=24
+COUNTER=${MAXCOUNTER}
+
+while true
+do
+  MSG="### $(uptime) ###"
+  if [ ${COUNTER} -le 0 ]
+  then
+    COUNTER=${MAXCOUNTER}
+    MSG="###  $(date)   -   $(uname -r) ###"
+  else
+    COUNTER=$((COUNTER-1))
+  fi
+  logger "${MSG}"
+  sleep ${SLEEPTIME}
+done
