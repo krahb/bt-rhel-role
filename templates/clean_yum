@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # cleanup yum stuff
-package-cleanup --quiet --assumeyes --oldkernels
+package-cleanup --quiet --assumeyes --oldkernels >/dev/null
 yum --quiet clean all
 rm -rf /var/cache/yum
