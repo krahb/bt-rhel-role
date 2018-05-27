@@ -15,6 +15,7 @@ required_packages:
   - git
   - curl
   - unzip
+  - xorg-x11-xauth
 disabled_services:
   - ntpd
 enabled_services:
