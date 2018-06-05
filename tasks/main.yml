@@ -93,5 +93,6 @@
   tags: update
 - name: wait for {{ inventory_hostname }}
   wait_for_connection:
+    delay: 12
   tags: update
 ...
