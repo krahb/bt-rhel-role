@@ -16,7 +16,6 @@ required_packages:
   - curl
   - unzip
   - xorg-x11-xauth
-  - pantheon-terminal
 disabled_services:
   - ntpd
 enabled_services:
