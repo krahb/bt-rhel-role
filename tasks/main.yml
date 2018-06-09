@@ -7,17 +7,24 @@
   timezone:
     name: "{{ timezone }}"
   tags: timezone
-- name: general packages installed
+- name: required packages installed
   yum:
     name: "{{ item }}"
     state: present
   with_items: "{{ required_packages }}"
+- name: additional packages installed
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ nicetohave_packages }}"
+  ignore_errors: yes
 - name: services stopped and disabled
   service:
     name: "{{ item }}"
     state: stopped
     enabled: no
   with_items: "{{ disabled_services }}"
+  ignore_errors: yes
 - name: services enabled and started
   service:
     name: "{{ item }}"
