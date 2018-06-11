@@ -22,5 +22,4 @@ disabled_services:
 enabled_services:
   - firewalld
   - chronyd
-generate_hosts: false
 ...

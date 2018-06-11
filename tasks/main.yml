@@ -7,14 +7,6 @@
   timezone:
     name: "{{ timezone }}"
   tags: timezone
-- name:
-  replace:
-    dest: /etc/hosts
-    regexp: '^{{ hostvars[item].ansible_default_ipv4.address }}(.*)$'
-    replace: '{{ hostvars[item].ansible_default_ipv4.address }} {{item}}\1'
-    mode: '0644'
-  when: generate_hosts and hostvars[item].ansible_default_ipv4.address is defined
-  with_items: "{{ groups['all'] }}"
 - name: required packages installed
   yum:
     name: "{{ item }}"
