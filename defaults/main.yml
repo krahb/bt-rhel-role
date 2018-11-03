@@ -1,5 +1,5 @@
 ---
-timezone: "Europe/London"
+timezone: "Europe/Amsterdam"
 wait_delay: 16
 required_packages:
   - firewalld
