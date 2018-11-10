@@ -1,5 +1,5 @@
 ---
-timezone: "Europe/London"
+timezone: "Europe/Amsterdam"
 wait_delay: 16
 required_packages:
   - firewalld
@@ -11,10 +11,11 @@ required_packages:
   - epel-release
   - iscsi-initiator-utils
   - rsync
-  - nmon
   - git
   - curl
   - unzip
+nicetohave_packages:
+  - nmon
   - xorg-x11-xauth
 disabled_services:
   - ntpd
