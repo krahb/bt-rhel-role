@@ -55,6 +55,14 @@
       daemon_reload: true
   when: ansible_service_mgr == "systemd", 
   tags: keepalive
+- name: "Build hosts file"
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^{{ hostvars[item].ansible_default_ipv4.address }}(.*)$'
+    line: '{{ hostvars[item].ansible_default_ipv4.address }} {{item}}'
+    mode: '0644'
+  when: hostvars[item].ansible_default_ipv4.address is defined
+  with_items: "{{ groups['all'] }}"
 - name: latest kernel version installed
   yum:
     name: kernel
