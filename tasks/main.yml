@@ -88,17 +88,7 @@
   changed_when: "needs_restarting.rc == 1"
   tags: update
 - name: reboot
-  shell: sleep 2 && /usr/sbin/shutdown -r now "Kernel update"
-  async: 1
-  poll: 0
-  ignore_errors: true
+  reboot:
   when: (kernel_update.changed) or (needs_restarting.changed)
-  changed_when: true
-  register: reboot_after_kernel_update
-  tags: update
-- name: wait for {{ inventory_hostname }}
-  wait_for_connection:
-    delay: 12
-  when: reboot_after_kernel_update.changed
   tags: update
 ...
