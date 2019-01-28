@@ -68,6 +68,7 @@
     mode: '0644'
   when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: "{{ groups['all'] }}"
+  ignore_errors: true
 - name: latest kernel version installed
   yum:
     name: kernel
