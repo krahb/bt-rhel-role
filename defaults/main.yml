@@ -6,14 +6,17 @@ required_packages:
   - chrony
   - yum-utils
   - bind-utils
-  - libselinux-python
-  - policycoreutils-python
   - epel-release
   - iscsi-initiator-utils
   - rsync
   - git
   - curl
   - unzip
+selinux_packages_7:
+  - libselinux-python
+  - policycoreutils-python
+selinux_packages_8:
+- libsemanage-python3
 nicetohave_packages:
   - nmon
   - xorg-x11-xauth

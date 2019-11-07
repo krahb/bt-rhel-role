@@ -11,6 +11,16 @@
   yum:
     name: "{{ required_packages }}"
     state: present
+- name: required packages installed
+  yum:
+    name: "{{ selinux_packages_7 }}"
+    state: present
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version|int < 8
+- name: required packages installed
+  yum:
+    name: "{{ selinux_packages_8 }}"
+    state: present
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8
 - name: additional packages installed
   yum:
     name: "{{ nicetohave_packages }}"
@@ -91,13 +101,13 @@
     msg: "{{ yum_history.stdout_lines }}"
   when: latest_all.changed and not ansible_check_mode
 - name: check for restart needed
-  shell: needs-restarting --reboothint
+  shell: needs-restarting
   ignore_errors: true
   register: needs_restarting
-  changed_when: "needs_restarting.rc == 1"
+  changed_when: false
   tags: update
 - name: reboot
   reboot:
-  when: (kernel_update.changed) or (needs_restarting.changed)
+  when: (kernel_update.changed) or (needs_restarting.stdout_lines|length>0)
   tags: update
 ...
