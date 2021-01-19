@@ -12,6 +12,7 @@ required_packages:
   - git
   - curl
   - unzip
+  - subscription-manager
 selinux_packages_7:
   - libselinux-python
   - policycoreutils-python
